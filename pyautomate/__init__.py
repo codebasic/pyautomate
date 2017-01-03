@@ -2,6 +2,13 @@ import os
 import shutil
 import subprocess
 
+class FileExistsWarning(UserWarning):
+    def __init__(self, path):
+        self.path = path
+
+    def __str__(self):
+        return '{} exists. overwrite=True to overwrite'.format(self.path)
+
 def prompt_user(message):
     prompt = input('{} (y/n) '.format(message))
     return True if prompt.lower().startswith('y') else False

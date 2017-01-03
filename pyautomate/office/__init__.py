@@ -1,6 +1,9 @@
 # coding: utf-8
 import docx
 import pandas as pd
+import os
+import warnings
+from .. import FileExistsWarning
 
 def Excel(io, sheetname=None, header=0):
     frames = pd.read_excel(io, sheetname=sheetname, header=header)
@@ -8,7 +11,7 @@ def Excel(io, sheetname=None, header=0):
     frames = sorted(frames)
     return frames[0][1] if len(frames) == 1 else frames
 
-def to_excel(src, path):
+def to_excel(src, path, overwrite=False):
     """Helper to save pandas.DataFrame(s) to excel file.
 
     pandas.DataFrame.to_excel requires steps
@@ -22,6 +25,9 @@ def to_excel(src, path):
     """
     if not path.endswith('.xlsx'):
         path = '{}.xlsx'.format(path)
+
+    if os.path.exists(path) and not overwrite:
+        warnings.warn(FileExistsWarning(path))
 
     if isinstance(src, pd.DataFrame):
         return src.to_excel(path)
