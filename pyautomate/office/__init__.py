@@ -5,6 +5,7 @@ import pandas as pd
 def Excel(io, sheetname=None, header=0):
     frames = pd.read_excel(io, sheetname=sheetname, header=header)
     frames = [(sheetname, frame) for sheetname, frame in frames.items()]
+    frames = sorted(frames)
     return frames[0][1] if len(frames) == 1 else frames
 
 def to_excel(src, path):
@@ -19,6 +20,9 @@ def to_excel(src, path):
     src: DataFrame or list of DataFrames
     path: excel file path to save DataFrame(s)
     """
+    if not path.endswith('.xlsx'):
+        path = '{}.xlsx'.format(path)
+
     if isinstance(src, pd.DataFrame):
         return src.to_excel(path)
 
