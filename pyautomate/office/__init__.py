@@ -7,6 +7,27 @@ def Excel(io, sheetname=None, header=0):
     frames = [(sheetname, frame) for sheetname, frame in frames.items()]
     return frames[0][1] if len(frames) == 1 else frames
 
+def to_excel(src, path):
+    """Helper to save pandas.DataFrame(s) to excel file.
+
+    pandas.DataFrame.to_excel requires steps
+    to save multiple frames as a single file.
+    This helper function saves multiple frames
+    into a single excel file in a single call.
+
+    :param
+    src: DataFrame or list of DataFrames
+    path: excel file path to save DataFrame(s)
+    """
+    if isinstance(src, pd.DataFrame):
+        return src.to_excel(path)
+
+    excel_writer = pd.ExcelWriter(path)
+    for i, frame in enumerate(src):
+        sheetname = frame.name if hasattr(frame, 'name') else 'sheet {}'.format(i)
+        frame.to_excel(excel_writer, sheetname)
+    else:
+        excel_writer.save()
 
 def Word(filepath_or_buffer=None):
     """
