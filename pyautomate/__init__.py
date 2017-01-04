@@ -4,6 +4,7 @@ import subprocess
 
 class FileExistsWarning(UserWarning):
     def __init__(self, path):
+        super().__init__(self)
         self.path = path
 
     def __str__(self):
