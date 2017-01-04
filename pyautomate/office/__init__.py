@@ -1,15 +1,20 @@
 # coding: utf-8
-import docx
-import pandas as pd
 import os
 import warnings
+
+import pandas as pd
+import docx
+from pptx import Presentation as PowerPoint
+from pptx.util import Cm, Pt
+
 from .. import FileExistsWarning
 
-def Excel(io, sheetname=None, header=0):
+def Excel(io, sheetname=0, header=0):
     frames = pd.read_excel(io, sheetname=sheetname, header=header)
-    frames = [(sheetname, frame) for sheetname, frame in frames.items()]
-    frames = sorted(frames)
-    return frames[0][1] if len(frames) == 1 else frames
+    if isinstance(frames, dict):
+        frames = [(name, frame) for name, frame in frames.items()]
+        frames.sort()
+    return frames
 
 def to_excel(src, path, overwrite=False):
     """Helper to save pandas.DataFrame(s) to excel file.

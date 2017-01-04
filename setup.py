@@ -6,6 +6,7 @@ install_requires = [
     'selenium',
     'requests',
     'python-docx',
+    'python-pptx'
 ]
 
 setup(
