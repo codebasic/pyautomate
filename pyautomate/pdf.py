@@ -10,7 +10,15 @@ class PDFDocument:
     def __init__(self, filepath):
         self.filepath = filepath
 
-    def extract_text(self, output_file=None):
+    def extract_text(self, output_file=None, **options):
+        """extract text from the pdf file.
+
+        Keyword arguments:
+        output_file -- file path to save the content of the pdf file.
+        Default is None. If None, returns the content as string.
+        If filepath ends with .docx, the content is saved as Word format.
+        Else, saved as text file.
+        """
         output = io.StringIO()
 
         in_file = open(self.filepath, 'rb')
@@ -29,6 +37,7 @@ class PDFDocument:
             print(output_file)
 
         else:
-            with open(outpuf_file, 'wb') as fout:
+            encoding = options.get('encoding', 'utf-8')
+            with open(output_file, 'w', encoding=encoding) as fout:
                 fout.write(content)
             print(output_file)
