@@ -34,10 +34,8 @@ class PDFDocument:
             word_doc = office.Word()
             word_doc.add_paragraph(content)
             word_doc.save(output_file)
-            print(output_file)
 
         else:
             encoding = options.get('encoding', 'utf-8')
             with open(output_file, 'w', encoding=encoding) as fout:
                 fout.write(content)
-            print(output_file)
