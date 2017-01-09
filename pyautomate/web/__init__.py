@@ -4,7 +4,6 @@ import sys
 import stat
 import platform
 import subprocess
-import argparse
 import time
 import urllib
 from urllib.parse import urlparse
@@ -107,12 +106,3 @@ def test_webdriver(driverfile):
     search_box.submit()
     time.sleep(1)
     chrome.quit()
-
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('version')
-    args = parser.parse_args()
-    setup_webdriver(args.version)
-
-if __name__ == '__main__':
-    sys.exit(main())
