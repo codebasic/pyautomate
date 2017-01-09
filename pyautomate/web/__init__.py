@@ -9,11 +9,13 @@ import urllib
 from urllib.parse import urlparse
 import re
 import importlib
+import warnings
 
 import requests
 import pip
 
 from . import html
+from ..__init__ import FileExistsWarning
 
 def parse_html(src, encoding='utf-8'):
     """Returns BeautifulSoup from URL or file
@@ -33,12 +35,12 @@ def parse_html(src, encoding='utf-8'):
     # return BeautifulSoup(doc, parser)
     return html.Html(doc)
 
-def download(url, filepath, chunksize=100000):
+def download(url, filepath, chunksize=100000, overwrite=False):
+    if os.path.exists(filepath) and not overwrite:
+        warnings.warn(FileExistsWarning(filepath))
+
     res = requests.get(url)
     res.raise_for_status()
-    if os.path.exists(filepath):
-        print('File already exists')
-        return filepath
 
     with open(filepath, 'wb') as target_file:
         for chunk in res.iter_content(chunksize):
