@@ -3,12 +3,16 @@ import shutil
 import subprocess
 
 class FileExistsWarning(UserWarning):
-    def __init__(self, path):
+    def __init__(self, path, extra_msg=None):
         super().__init__(self)
         self.path = path
+        self.extra_msg = extra_msg
 
     def __str__(self):
-        return '{} exists. overwrite=True to overwrite'.format(self.path)
+        msg = '{} exists.'.format(self.path)
+        if self.extra_msg:
+            msg = '{} {}'.format(msg, self.extra_msg)
+        return msg
 
 def prompt_user(message):
     prompt = input('{} (y/n) '.format(message))
