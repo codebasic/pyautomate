@@ -14,6 +14,8 @@ import warnings
 import requests
 import pip
 
+from selenium.webdriver.common.keys import Keys
+
 from . import html
 from ..__init__ import FileExistsWarning
 
@@ -57,14 +59,17 @@ def get_browser(driverpath, browser='Chrome'):
     driver = getattr(webdriver, browser)(driverpath)
     return driver
 
-def setup_webdriver(version, test=False):
+def setup_webdriver(driver_version, download_dir='.', test=False):
     print('chromedriver 다운로드')
-    downloaded_file = download_chromedriver(version)
-    print(downloaded_file)
+    url = get_chromedriver_url(driver_version)
+    # 다운로드 파일 경로 구성
+    filename = url.split('/')[-1]
+    filepath = os.path.join(download_dir, filename)
+    download(url, filepath)
 
     # 압축 해제
     print('다운로드 받은 파일 압축 해제', end=' ... ')
-    command_to_extract_zip = 'python -m zipfile -e {} .'.format(downloaded_file).split()
+    command_to_extract_zip = 'python -m zipfile -e {} .'.format(filepath).split()
     subprocess.run(command_to_extract_zip, check=True)
     print('완료')
 
@@ -78,9 +83,7 @@ def setup_webdriver(version, test=False):
         test_webdriver(driverfile)
         print('완료')
 
-    return driverfile
-
-def download_chromedriver(version):
+def get_chromedriver_url(version):
     driverfile_map = {
         'Windows': 'chromedriver_win32.zip',
         'Darwin': 'chromedriver_mac64.zip'}
@@ -91,9 +94,7 @@ def download_chromedriver(version):
 
     chromedriver_url = 'http://chromedriver.storage.googleapis.com/'
     chromedriver_url += '{}/{}'.format(version, download_target)
-
-    driverfilepath = download(chromedriver_url, download_target)
-    return driverfilepath
+    return chromedriver_url
 
 def test_webdriver(driverfile):
     from selenium import webdriver
