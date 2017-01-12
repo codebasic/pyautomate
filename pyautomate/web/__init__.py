@@ -10,10 +10,11 @@ from urllib.parse import urlparse
 import re
 import importlib
 import warnings
+from collections import namedtuple
 
 import requests
 import pip
-
+import pandas as pd
 from selenium.webdriver.common.keys import Keys
 
 from . import html
@@ -36,6 +37,26 @@ def parse_html(src, encoding='utf-8'):
     # select parser for BeautifulSoup
     # return BeautifulSoup(doc, parser)
     return html.Html(doc)
+
+def get_attribute(elem, attr):
+    """ Get HTML Tag element attribute
+    """
+    if hasattr(elem, 'get'):
+        return elem.get(attr)
+    elif hasattr(elem, 'get_attribute'):
+        return elem.get_attribute(attr)
+
+def get_urls(elements, as_table=False):
+    Url = namedtuple('URL', ['text', 'url'])
+    urls = []
+    for elem in elements:
+        url = get_attribute(elem, 'href')
+        if url:
+            urls.append(Url(elem.text, url))
+
+    if as_table:
+        return pd.DataFrame(urls)
+    return urls
 
 def download(url, filepath, chunksize=100000, overwrite=False):
     if os.path.exists(filepath) and not overwrite:
