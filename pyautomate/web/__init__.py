@@ -46,7 +46,7 @@ def get_urls(elements):
      # control characters
     trans_map = dict.fromkeys(range(32))
     # add special characters
-    trans_map.update(dict.fromkeys(list(range(166, 256))))
+    trans_map.update(dict.fromkeys(list(range(166, 256)), ' '))
 
     Url = namedtuple('URL', ['text', 'url'])
     urls = []
