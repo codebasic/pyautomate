@@ -1,23 +1,12 @@
 # coding: utf-8
 import importlib
-
-import requests
 import pandas as pd
 from bs4 import BeautifulSoup
 
 class Html(BeautifulSoup):
     def __init__(self, html):
-        parser = 'lxml' if importlib.find_loader('lxml') else 'html.parser'
+        parser = 'lxml' if importlib.util.find_spec('lxml') else 'html.parser'
         super().__init__(html, parser, from_encoding='utf-8')
-
-    def get_text(self, selector='p'):
-        elements = self.select(selector)
-        text = ''
-        for e in elements:
-            text += e.text
-            text += '\n'
-
-        return text
 
     def extract_tables(self, selector):
         table_elements = self.select(selector)

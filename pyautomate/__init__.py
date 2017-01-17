@@ -1,6 +1,7 @@
 import os
 import shutil
 import subprocess
+from datetime import datetime
 
 class FileExistsWarning(UserWarning):
     def __init__(self, path, extra_msg=None):
@@ -13,6 +14,12 @@ class FileExistsWarning(UserWarning):
         if self.extra_msg:
             msg = '{} {}'.format(msg, self.extra_msg)
         return msg
+
+def get_timestamp(date_time=None):
+    if not date_time:
+        date_time = datetime.now()
+
+    return date_time.strftime('%Y-%m-%dT%H%M')
 
 def prompt_user(message):
     prompt = input('{} (y/n) '.format(message))
