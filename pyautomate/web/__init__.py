@@ -17,26 +17,22 @@ import pip
 import pandas as pd
 from selenium.webdriver.common.keys import Keys
 
-from . import html
+from .html import Html
 from ..__init__ import FileExistsWarning
 
-def parse_html(src, encoding='utf-8'):
+def parse_html(src):
     """Returns BeautifulSoup from URL or file
 
-    src: url or filepath
-    encoding: (default=utf-8)
+    src: url or html string or file-like object
     """
     # check if url or filepath
     scheme = urlparse(src).scheme
     if re.compile('(http|https)').match(scheme):
         res = requests.get(src)
+        res.raise_for_status()
         doc = res.text
-    else:
-        doc = open(src, encoding=encoding)
 
-    # select parser for BeautifulSoup
-    # return BeautifulSoup(doc, parser)
-    return html.Html(doc)
+    return Html(doc)
 
 def get_attribute(elem, attr):
     """ Get HTML Tag element attribute
@@ -46,16 +42,20 @@ def get_attribute(elem, attr):
     elif hasattr(elem, 'get_attribute'):
         return elem.get_attribute(attr)
 
-def get_urls(elements, as_table=False):
+def get_urls(elements):
+     # control characters
+    trans_map = dict.fromkeys(range(32))
+    # add special characters
+    trans_map.update(dict.fromkeys(list(range(166, 256))))
+
     Url = namedtuple('URL', ['text', 'url'])
     urls = []
     for elem in elements:
         url = get_attribute(elem, 'href')
-        if url:
-            urls.append(Url(elem.text, url))
+        text = elem.text.translate(trans_map).strip()
+        if text and url:
+            urls.append(Url(text, url))
 
-    if as_table:
-        return pd.DataFrame(urls)
     return urls
 
 def download(url, filepath, chunksize=100000, overwrite=False):
