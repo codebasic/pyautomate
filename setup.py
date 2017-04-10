@@ -16,6 +16,6 @@ setup(
     author_email='seongjoo@codebasic.io',
     description='Automate things',
     license='Apache 2.0',
-    packages=['pyautomate'],
+    packages=['pyautomate', 'pyautomate.office', 'pyautomate.web'],
     install_requires=install_requires
 )
