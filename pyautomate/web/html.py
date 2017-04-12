@@ -6,7 +6,8 @@ from bs4 import BeautifulSoup
 class Html(BeautifulSoup):
     def __init__(self, html):
         parser = 'lxml' if importlib.util.find_spec('lxml') else 'html.parser'
-        super().__init__(html, parser, from_encoding='utf-8')
+        encoding = None if isinstance(html, str) else 'utf-8'
+        super().__init__(html, parser, from_encoding=encoding)
 
     def extract_tables(self, selector):
         table_elements = self.select(selector)

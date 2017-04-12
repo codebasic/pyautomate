@@ -20,17 +20,18 @@ from selenium.webdriver.common.keys import Keys
 from .html import Html
 from ..__init__ import FileExistsWarning
 
-def parse_html(src):
+def parse_html(src, encoding='utf-8'):
     """Returns BeautifulSoup from URL or file
 
     src: url or html string or file-like object
     """
     # check if url or filepath
-    scheme = urlparse(src).scheme
-    if re.compile('(http|https)').match(scheme):
+    if hasattr(src, 'startswith') and src.startswith('http'):
         res = requests.get(src)
         res.raise_for_status()
         doc = res.text
+    else:
+        doc = open(src, encoding=encoding)
 
     return Html(doc)
 
