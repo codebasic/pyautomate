@@ -6,7 +6,8 @@ install_requires = [
     'selenium',
     'requests',
     'python-docx',
-    'python-pptx'
+    'python-pptx',
+    'pdfminer.six'
 ]
 
 setup(

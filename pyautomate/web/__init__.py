@@ -25,13 +25,17 @@ def parse_html(src, encoding='utf-8'):
 
     src: url or html string or file-like object
     """
+    if not isinstance(src, str):
+        raise ValueError('{} must be str, url, or html file')
     # check if url or filepath
-    if hasattr(src, 'startswith') and src.startswith('http'):
+    if src.startswith('http'):
         res = requests.get(src)
         res.raise_for_status()
         doc = res.text
-    else:
+    elif os.path.isfile(src):
         doc = open(src, encoding=encoding)
+    else:
+        doc = src
 
     return Html(doc)
 
