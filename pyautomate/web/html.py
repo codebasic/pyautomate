@@ -3,6 +3,7 @@ import importlib
 import pandas as pd
 from bs4 import BeautifulSoup
 
+
 class Html(BeautifulSoup):
     def __init__(self, html):
         parser = 'lxml' if importlib.util.find_spec('lxml') else 'html.parser'

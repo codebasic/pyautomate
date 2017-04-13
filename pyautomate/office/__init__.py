@@ -9,12 +9,14 @@ from pptx.util import Cm, Pt
 
 from .. import FileExistsWarning
 
+
 def Excel(io, sheetname=0, header=0):
     frames = pd.read_excel(io, sheetname=sheetname, header=header)
     if isinstance(frames, dict):
         frames = [(name, frame) for name, frame in frames.items()]
         frames.sort()
     return frames
+
 
 def to_excel(src, path, overwrite=False):
     """Helper to save pandas.DataFrame(s) to excel file.
@@ -39,10 +41,14 @@ def to_excel(src, path, overwrite=False):
 
     excel_writer = pd.ExcelWriter(path)
     for i, frame in enumerate(src):
-        sheetname = frame.name if hasattr(frame, 'name') else 'sheet {}'.format(i)
+        if hasattr(frame, 'name'):
+            sheetname = frame.name
+        else:
+            sheetname = 'sheet {}'.format(i)
         frame.to_excel(excel_writer, sheetname)
     else:
         excel_writer.save()
+
 
 def Word(filepath_or_buffer=None):
     """
@@ -58,8 +64,10 @@ def Word(filepath_or_buffer=None):
     # make instance using patched class
     return docx.Document(filepath_or_buffer)
 
+
 def extract_text(self):
     return '\n'.join([p.text for p in self.paragraphs])
+
 
 def extract_tables(self, select=None):
     table_list = []
@@ -86,6 +94,7 @@ def extract_tables(self, select=None):
     else:
         return table_list[select]
 
+
 def tables_to_excel(self, filepath_or_buffer):
     table_list = self.extract_tables()
 
@@ -96,8 +105,9 @@ def tables_to_excel(self, filepath_or_buffer):
 
     return filepath_or_buffer
 
-def add_tables_from_excel(self, excel_filepath, sheetname=None,
-    table_style='TableGrid'):
+
+def add_tables_from_excel(
+        self, excel_filepath, sheetname=None, table_style='TableGrid'):
     table_frames = Excel(excel_filepath, sheetname=sheetname)
 
     if not isinstance(table_frames, list):
@@ -112,9 +122,12 @@ def add_tables_from_excel(self, excel_filepath, sheetname=None,
             for j, cell in enumerate(row.cells):
                 cell.text = str(frame.iloc[i, j])
 
+
 def add_picture(self, image_path_or_stream, width=None, height=None):
-    if width: width = docx.shared.Inches(width)
-    if height: height = docx.shared.Inches(height)
+    if width:
+        width = docx.shared.Inches(width)
+    if height:
+        height = docx.shared.Inches(height)
 
     run = self.add_paragraph().add_run()
     return run.add_picture(image_path_or_stream, width, height)

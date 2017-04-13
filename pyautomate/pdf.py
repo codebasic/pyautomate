@@ -2,9 +2,11 @@ import io
 from pdfminer import high_level as pdf
 from . import office
 
+
 def clean_string(src):
     """Removes control characters"""
     return src.translate(dict.fromkeys(range(32)))
+
 
 class PDFDocument:
     def __init__(self, filepath):

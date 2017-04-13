@@ -20,6 +20,7 @@ from selenium.webdriver.common.keys import Keys
 from .html import Html
 from ..__init__ import FileExistsWarning
 
+
 def parse_html(src, encoding='utf-8'):
     """Returns BeautifulSoup from URL or file
 
@@ -39,6 +40,7 @@ def parse_html(src, encoding='utf-8'):
 
     return Html(doc)
 
+
 def get_attribute(elem, attr):
     """ Get HTML Tag element attribute
     """
@@ -47,8 +49,9 @@ def get_attribute(elem, attr):
     elif hasattr(elem, 'get_attribute'):
         return elem.get_attribute(attr)
 
+
 def get_urls(elements):
-     # control characters
+    # control characters
     trans_map = dict.fromkeys(range(32))
     # add special characters
     trans_map.update(dict.fromkeys(list(range(166, 256)), ' '))
@@ -63,9 +66,11 @@ def get_urls(elements):
 
     return urls
 
+
 def download(url, filepath, chunksize=100000, overwrite=False):
     if os.path.exists(filepath) and not overwrite:
-        return warnings.warn(FileExistsWarning(filepath, 'overwrite=True to overwrite'))
+        return warnings.warn(
+            FileExistsWarning(filepath, 'overwrite=True to overwrite'))
 
     res = requests.get(url)
     res.raise_for_status()
@@ -75,15 +80,18 @@ def download(url, filepath, chunksize=100000, overwrite=False):
             if chunk:
                 target_file.write(chunk)
 
+
 def unquote_url(url):
     if '+' in url:
         return urllib.parse.unquote_plus(url)
     return urllib.parse.unquote(url)
 
+
 def get_browser(driverpath, browser='Chrome'):
     from selenium import webdriver
     driver = getattr(webdriver, browser)(driverpath)
     return driver
+
 
 def setup_webdriver(driver_version, download_dir='.', test=False):
     print('chromedriver 다운로드')
@@ -95,12 +103,14 @@ def setup_webdriver(driver_version, download_dir='.', test=False):
 
     # 압축 해제
     print('다운로드 받은 파일 압축 해제', end=' ... ')
-    command_to_extract_zip = 'python -m zipfile -e {} .'.format(filepath).split()
+    command_to_extract_zip = 'python -m zipfile -e {} .'
+    command_to_extract_zip = command_to_extract_zip.format(filepath).split()
     subprocess.run(command_to_extract_zip, check=True)
     print('완료')
 
     # 실행권한 설정
-    driverfile = 'chromedriver.exe' if platform.system() == 'Windows' else 'chromedriver'
+    driverfile = 'chromedriver'
+    driverfile += '.exe' if platform.system() == 'Windows'
     file_stat = os.stat(driverfile)
     os.chmod(driverfile, file_stat.st_mode | stat.S_IEXEC)
 
@@ -108,6 +118,7 @@ def setup_webdriver(driver_version, download_dir='.', test=False):
         print('설정 테스트', end=' ... ')
         test_webdriver(driverfile)
         print('완료')
+
 
 def get_chromedriver_url(version):
     driverfile_map = {
@@ -121,6 +132,7 @@ def get_chromedriver_url(version):
     chromedriver_url = 'http://chromedriver.storage.googleapis.com/'
     chromedriver_url += '{}/{}'.format(version, download_target)
     return chromedriver_url
+
 
 def test_webdriver(driverfile):
     from selenium import webdriver
