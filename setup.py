@@ -12,7 +12,7 @@ install_requires = [
 
 setup(
     name='pyautomate',
-    version='0.1.1',
+    version='0.1.2',
     author='Lee Seongjoo',
     author_email='seongjoo@codebasic.io',
     description='Automate things',
