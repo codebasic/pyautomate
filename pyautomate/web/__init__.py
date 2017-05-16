@@ -93,7 +93,7 @@ def get_browser(driverpath, browser='Chrome'):
     return driver
 
 
-def setup_webdriver(driver_version, download_dir='.', test=False):
+def setup_webdriver(driver_version, download_dir='.'):
     print('chromedriver 다운로드')
     url = get_chromedriver_url(driver_version)
     # 다운로드 파일 경로 구성
@@ -115,11 +115,6 @@ def setup_webdriver(driver_version, download_dir='.', test=False):
     file_stat = os.stat(driverfile)
     os.chmod(driverfile, file_stat.st_mode | stat.S_IEXEC)
 
-    if test:
-        print('설정 테스트', end=' ... ')
-        test_webdriver(driverfile)
-        print('완료')
-
 
 def get_chromedriver_url(version):
     driverfile_map = {
@@ -130,19 +125,6 @@ def get_chromedriver_url(version):
     if download_target is None:
         sys.exit('No chromedriver for {0}'.format(platform.system()))
 
-    chromedriver_url = 'http://chromedriver.storage.googleapis.com/'
+    chromedriver_url = 'https://chromedriver.storage.googleapis.com/'
     chromedriver_url += '{}/{}'.format(version, download_target)
     return chromedriver_url
-
-
-def test_webdriver(driverfile):
-    from selenium import webdriver
-    chrome = webdriver.Chrome(os.path.join('.', driverfile))
-    chrome.get('http://www.gogle.com')
-    time.sleep(1)
-    search_box = chrome.find_element_by_name('q')
-    search_box.send_keys('파이썬')
-    time.sleep(1)
-    search_box.submit()
-    time.sleep(1)
-    chrome.quit()
