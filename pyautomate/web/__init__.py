@@ -110,7 +110,8 @@ def setup_webdriver(driver_version, download_dir='.', test=False):
 
     # 실행권한 설정
     driverfile = 'chromedriver'
-    driverfile += '.exe' if platform.system() == 'Windows'
+    if platform.system() == 'Windows':
+        driverfile += '.exe'
     file_stat = os.stat(driverfile)
     os.chmod(driverfile, file_stat.st_mode | stat.S_IEXEC)
 
