@@ -18,7 +18,7 @@ import pandas as pd
 from selenium.webdriver.common.keys import Keys
 
 from .html import Html
-from ..__init__ import FileExistsWarning
+from ..__init__ import PathExistsWarning
 
 
 def parse_html(src, encoding='utf-8'):

@@ -7,7 +7,7 @@ import docx
 from pptx import Presentation as PowerPoint
 from pptx.util import Cm, Pt
 
-from .. import FileExistsWarning
+# from ..__init__ import PathExistsWarning
 
 
 def Excel(io, sheetname=0, header=0):

@@ -7,7 +7,8 @@ install_requires = [
     'requests',
     'python-docx',
     'python-pptx',
-    'pdfminer.six'
+    'pdfminer.six',
+    'send2trash'
 ]
 
 setup(
