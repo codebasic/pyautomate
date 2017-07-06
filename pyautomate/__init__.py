@@ -4,6 +4,9 @@ import shutil
 import subprocess
 from datetime import datetime
 
+from . import office
+from . import web
+
 
 class FileExistsWarning(UserWarning):
     def __init__(self, path, extra_msg=None):
@@ -30,13 +33,12 @@ def prompt_user(message):
     return True if prompt.lower().startswith('y') else False
 
 
-def touch(filepath, content=None, overwrite=True, encoding='utf-8'):
-    mode = 'w' if overwrite else 'a'
-    with open(filepath, mode, encoding=encoding) as file:
-        if content:
-            file.write(content)
-
-    return filepath
+def touch(fname, mode=0o666, dir_fd=None, **kwargs):
+    flags = os.O_CREAT | os.O_APPEND
+    with os.fdopen(os.open(fname, flags=flags, mode=mode, dir_fd=dir_fd)) as f:
+        os.utime(
+            f.fileno() if os.utime in os.supports_fd else fname,
+            dir_fd=None if os.supports_fd else dir_fd, **kwargs)
 
 
 def print_file(path, nlines=5, encoding='utf-8'):
