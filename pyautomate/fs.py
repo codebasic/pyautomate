@@ -1,5 +1,6 @@
 # coding: utf-8
 
+from os import walk
 import os
 from os.path import exists, join, isfile, isdir
 from shutil import move
@@ -56,3 +57,12 @@ def delete(path, ask=True):
 
     send2trash(path)
     return True
+
+
+def zip(filename, base_dir, format='zip', **kwargs):
+    basename, ext = os.path.splitext(filename)
+    shutil.make_archive(basename, base_dir=base_dir, format=format, **kwargs)
+
+
+def unzip(filename, extract_dir='.'):
+    shutil.unpack_archive(filename, extract_dir)
