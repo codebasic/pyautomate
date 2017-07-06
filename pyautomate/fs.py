@@ -54,19 +54,5 @@ def delete(path, ask=True):
     if not exists(path):
         return False
 
-    confirm = True
-    if ask:
-        confirm = prompt_user('{} will be deleted. OK?'.format(path))
-        if not confirm:
-            return
-
-    if isfile(path):
-        return os.unlink(path)
-
-    elif listdir(path):
-        if ask:
-            msg = '{} is not empty! Delete anyway?'
-            confirm = prompt_user(msg.format(path))
-        if not confirm:
-            return
-        return shutil.rmtree(path)
+    send2trash(path)
+    return True
