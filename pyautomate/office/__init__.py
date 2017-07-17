@@ -7,7 +7,7 @@ import docx
 from pptx import Presentation as PowerPoint
 from pptx.util import Cm, Pt
 
-# from ..__init__ import PathExistsWarning
+from .. import PathExistsWarning
 
 
 def Excel(io, sheetname=0, header=0):
@@ -34,7 +34,7 @@ def to_excel(src, path, overwrite=False):
         path = '{}.xlsx'.format(path)
 
     if os.path.exists(path) and not overwrite:
-        warnings.warn(FileExistsWarning(path))
+        warnings.warn(PathExistsWarning(path))
 
     if isinstance(src, pd.DataFrame):
         return src.to_excel(path)

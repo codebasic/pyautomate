@@ -18,7 +18,7 @@ import pandas as pd
 from selenium.webdriver.common.keys import Keys
 
 from .html import Html
-from ..__init__ import PathExistsWarning
+from .. import PathExistsWarning
 
 
 def parse_html(src, encoding='utf-8'):
@@ -70,7 +70,7 @@ def get_urls(elements):
 def download(url, filepath, chunksize=100000, overwrite=False):
     if os.path.exists(filepath) and not overwrite:
         return warnings.warn(
-            FileExistsWarning(filepath, 'overwrite=True to overwrite'))
+            PathExistsWarning(filepath, 'overwrite=True to overwrite'))
 
     res = requests.get(url)
     res.raise_for_status()

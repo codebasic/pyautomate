@@ -4,9 +4,6 @@ import shutil
 import subprocess
 from datetime import datetime
 
-from . import office
-from . import web
-
 
 class PathExistsWarning(UserWarning):
     def __init__(self, path, extra_msg=None):
@@ -21,11 +18,15 @@ class PathExistsWarning(UserWarning):
         return msg
 
 
-def get_timestamp(date_time=None):
+def get_timestamp(date_time=None, include_time=False):
     if not date_time:
         date_time = datetime.now()
 
-    return date_time.strftime('%Y-%m-%dT%H%M')
+    if include_time:
+        format_str = '%Y-%m-%dT%H%M'
+    else:
+        format_str = '%Y-%m-%d'
+    return date_time.strftime(format_str)
 
 
 def prompt_user(message):
@@ -37,12 +38,3 @@ def print_file(path, nlines=5, encoding='utf-8'):
     with open(path, encoding=encoding) as file:
         for line in file:
             print(line.rstrip())
-
-
-def zipit(output, files, option='c'):
-    command = 'python -m zipfile'
-    command = '{} -{} {}'.format(command, option, output)
-    command = '{} {}'.format(
-        command, ' '.join(files))
-    result = subprocess.run(command.split())
-    result.check_returncode()
