@@ -2,7 +2,7 @@
 
 from os import walk
 import os
-from os.path import exists, join, isfile, isdir
+from os.path import exists, join, isfile, isdir, splitext
 from shutil import move
 import shutil
 import warnings
